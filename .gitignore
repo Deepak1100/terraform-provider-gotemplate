@@ -1,0 +1,4 @@
+.terraform
+crash.log
+Plan.out
+terraform.tfstate*

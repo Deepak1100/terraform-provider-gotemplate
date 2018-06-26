@@ -6,7 +6,7 @@ variable "data" {
 }
 
 data "gotemplate" "gotmpl" {
-  template = "${path.module}/file.tmpl"
+  template = "${file("${path.module}/file.tmpl")}"
   data = "${jsonencode(var.data)}"
 }
 
