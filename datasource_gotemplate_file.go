@@ -18,6 +18,22 @@ func hash(s string) string {
 	return hex.EncodeToString(sha[:])
 }
 
+type Params struct {
+	Data     map[string]interface{}
+	Counter int
+}
+
+
+func (p *Params) IncMore(len int) bool {
+	p.Counter++
+	return p.Counter < len
+}
+
+func (p *Params) ResetCounter() bool {
+	p.Counter = 0
+	return true
+}
+
 type templateRenderError error
 
 func renderFile(d *schema.ResourceData) (string, error) {
@@ -27,10 +43,10 @@ func renderFile(d *schema.ResourceData) (string, error) {
 
 	var data string // data from tf
 	data = d.Get("data").(string)
-
+    
+	m := &Params{}
 	// unmarshal json from data into m
-	var m = make(map[string]interface{}) // unmarshal data into m
-	if err = json.Unmarshal([]byte(data), &m); err != nil {
+	if err = json.Unmarshal([]byte(data), &m.Data); err != nil {
 		panic(err)
 	}
 

@@ -1,0 +1,40 @@
+[
+    {
+      "logConfiguration": {
+        "logDriver": "json-file",
+        "options": {
+          "max-size": "100m",
+          "max-file": "1",
+          "labels": "source"
+        }
+      },
+      "command": "{{ .Data.command }}"
+      "cpu": {{ .Data.cpu }},
+      "environment": [
+      {{- $env_length := len .Data.env }}
+      {{- range $k,$v := .Data.env }}
+        {
+          "name": "{{ $k }}",
+          "value": "{{ $v }}"
+        }{{if $.IncMore $env_length}},{{end}}
+      {{- end }}
+      ],
+      "mountPoints": [
+      {{- range $k,$v := .Data.volume_map }}
+        {
+          "readOnly": true,
+          "containerPath": "{{ $k }}",
+          "sourceVolume": "{{ $v }}"
+          },
+      {{- end }}
+      ],
+      "dockerSecurityOptions": [],
+      "memory": ${mem},
+      "image": "${image}",
+      "dockerLabels": {
+        "logger": "logspout",
+        "source": "${var.source}"
+      },
+      "name": "${var.name}"
+    }
+]
